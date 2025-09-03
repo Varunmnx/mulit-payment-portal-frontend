@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { CashfreeOrderRequest, CashfreeOrderResponse, RazorpayOrderRequest, RazorpayOrderResponse } from '../types/payment';
 
-const API_BASE_URL = 'http://localhost:3000'; // Change this to your NestJS backend URL
+const API_BASE_URL = 'http://localhost:4800/api/payment-service'; // Change this to your NestJS backend URL
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -29,8 +29,8 @@ export const cashfreeService = {
 
   getProducts: async () => {
     try {
-      const response = await api.get('/cashfree/products');
-      return response.data;
+      const response = await api.get<{result:any,status:string}>('/cashfree/products');
+      return response.data?.result;
     } catch (error) {
       console.error('Error fetching Cashfree products:', error);
       return [];

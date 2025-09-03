@@ -18,6 +18,7 @@ const CashfreePage: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       const productsData = await cashfreeService.getProducts();
+      console.log("productsData", productsData);
       setProducts(productsData);
       if (productsData.length > 0) {
         setFormData(prev => ({
@@ -90,7 +91,7 @@ const CashfreePage: React.FC = () => {
         onChange={handleInputChange}
         required
       >
-        {products.map(product => (
+        {products?.map(product => (
           <option key={product._id || product.id} value={product._id || product.id}>
             {product.name} - ${product.price}
           </option>
