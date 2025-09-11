@@ -20,8 +20,23 @@ export interface CashfreeOrderResponse {
 
 export interface RazorpayOrderResponse {
   success: boolean;
-  orderId?: string;
+  id?: string;
   amount?: number;
   currency?: string;
   message?: string;
+  product?: {
+    name: string;
+  };
+}
+
+export interface RazorpayVerificationRequest {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}
+
+export interface RazorpayVerificationResponse {
+  success: boolean;
+  message?: string;
+  paymentDetails?: any;
 }

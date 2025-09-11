@@ -1,31 +1,38 @@
 import React from 'react';
-import './PaymentCard.css';
+import type { ReactNode } from 'react';
 
 interface PaymentCardProps {
   title: string;
-  children: React.ReactNode;
   onSubmit: (e: React.FormEvent) => void;
-  isProcessing?: boolean;
+  isProcessing: boolean;
+  children: ReactNode;
 }
 
-const PaymentCard: React.FC<PaymentCardProps> = ({ title, children, onSubmit, isProcessing = false }) => {
+const PaymentCard: React.FC<PaymentCardProps> = ({
+  title,
+  onSubmit,
+  isProcessing,
+  children
+}) => {
   return (
     <div className="payment-card">
-      <div className="payment-card-header">
+      <div className="payment-header">
         <h2>{title}</h2>
       </div>
-      <div className="payment-card-body">
-        <form onSubmit={onSubmit}>
+      
+      <form className="payment-form" onSubmit={onSubmit}>
+        <div className="form-fields">
           {children}
-          <button 
-            type="submit" 
-            className="pay-button"
-            disabled={isProcessing}
-          >
-            {isProcessing ? 'Processing...' : 'Pay Now'}
-          </button>
-        </form>
-      </div>
+        </div>
+        
+        <button 
+          type="submit" 
+          className="pay-button"
+          disabled={isProcessing}
+        >
+          {isProcessing ? 'Processing...' : 'Pay Now'}
+        </button>
+      </form>
     </div>
   );
 };

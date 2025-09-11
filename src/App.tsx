@@ -1,20 +1,72 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import CashfreePage from './pages/CashfreePage';
-import RazorpayPage from './pages/RazorpayPage';
+// import logo from './logo.svg';
 import './App.css';
+import { razorpayService } from './services/paymentService';
+
+
+function loadScript(src) {
+  return new Promise((resolve) => {
+    const script = document.createElement('script')
+    script.src = src
+    script.onload = () => {
+      resolve(true)
+    }
+    script.onerror = () => {
+      resolve(false)
+    }
+    document.body.appendChild(script)
+  })
+}
 
 function App() {
+
+async function displayRazorpay () {
+
+    const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js')
+
+      if (!res){
+        alert('Razropay failed to load!!')
+        return 
+      }
+      
+      const data = await razorpayService.createOrder({amount: 50000, currency: 'INR', productId: 'product_1'})
+      // const data = await fetch('http://localhost:4800/api/payment-service/razorpay/order', 
+      //   {method: 'POST', body: JSON.stringify({amount: 50000, currency: 'INR', productId: 'product_1'})}).then((t) => 
+      //   t.json()
+      // ) 
+
+      console.log(data)
+
+    const options = {
+      "key": import.meta.env.VITE_RAZORPAY_API_KEY, // Enter the Key ID generated from the Dashboard
+      "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      "currency": "INR",
+      "name": "Acme Corp",
+      "description": "Test Transaction",
+      "image": "https://example.com/your_logo",
+      "order_id": data?.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      "callback_url":"http://localhost:4800/api/payment-service/razorpay/verify",
+      "notes": {
+          "address": "Razorpay Corporate Office"
+      },
+      "theme": {
+          "color": "#3399cc"
+      }
+  };
+  const paymentObject = new window.Razorpay(options); 
+  paymentObject.open();
+  }
+
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/cashfree" element={<CashfreePage />} />
-          <Route path="/razorpay" element={<RazorpayPage />} />
-        </Routes>
-      </div>
-    </Router>
+    <div className="App">
+      <header className="App-header">
+        {/* <img src={logo} className="App-logo" alt="logo" />    */}
+        <button
+        onClick={displayRazorpay}
+        >
+          Pay now 
+        </button>
+      </header>
+    </div>
   );
 }
 

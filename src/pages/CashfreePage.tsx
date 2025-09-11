@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PaymentCard from '../components/PaymentCard';
-import { cashfreeService } from '../services/paymentService';
+import { cashfreeService, type CashFreeProduct } from '../services/paymentService';
 import type { CashfreeOrderRequest } from '../types/payment';
 
 const CashfreePage: React.FC = () => {
@@ -13,19 +13,13 @@ const CashfreePage: React.FC = () => {
     customerPhone: '',
   });
 
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<CashFreeProduct[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       const productsData = await cashfreeService.getProducts();
       console.log("productsData", productsData);
       setProducts(productsData);
-      if (productsData.length > 0) {
-        setFormData(prev => ({
-          ...prev,
-          productId: productsData[0]._id || productsData[0].id
-        }));
-      }
     };
 
     fetchProducts();
@@ -53,7 +47,7 @@ const CashfreePage: React.FC = () => {
 
       const response = await cashfreeService.createOrder(orderData);
       setResult(response);
-    } catch (error) {
+    } catch  {
       setResult({
         success: false,
         message: 'An unexpected error occurred'
@@ -92,7 +86,7 @@ const CashfreePage: React.FC = () => {
         required
       >
         {products?.map(product => (
-          <option key={product._id || product.id} value={product._id || product.id}>
+          <option key={product.id} value={product.id}>
             {product.name} - ${product.price}
           </option>
         ))}
