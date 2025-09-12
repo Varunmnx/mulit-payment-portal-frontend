@@ -1,5 +1,17 @@
 import type { CurrencyCode } from "./constants/currency";
 
+export const languages = {
+    "en": "English",
+    "ben": "Bengali",
+    "hi": "Hindi",
+    "mar": "Marathi",
+    "guj": "Gujarati",
+    "tam": "Tamil",
+    "tel": "Telugu"
+}
+
+type Language = keyof typeof languages
+
 export interface RazorpaySuccesshandlerArgs {
 	razorpay_signature: string;
 	razorpay_order_id: string;
@@ -61,6 +73,7 @@ export interface RazorpayOptions {
 	};
 	config?: {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		display: any
+		display: any;
+		language : Language
 	};
 }
