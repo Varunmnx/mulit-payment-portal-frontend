@@ -26,6 +26,7 @@ export interface RazorpayOrderResponse {
   message?: string;
   product?: {
     name: string;
+    price: number;
   };
 }
 

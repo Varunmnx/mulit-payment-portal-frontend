@@ -56,10 +56,7 @@ export const razorpayService = {
   createOrder: async (orderData: RazorpayOrderRequest): Promise<RazorpayOrderResponse> => {
     try {
       const response = await api.post('/razorpay/order', orderData);
-      return {
-        success: true,
-        ...response.data,
-      };
+      return response?.data.result
     } catch (error) {
       console.error('Razorpay order creation error:', error);
       return {
@@ -85,17 +82,11 @@ export const razorpayService = {
     razorpay_signature: string 
   }) => {
     try {
-      const response = await api.post('/razorpay/verify', verificationData);
-      return {
-        success: true,
-        ...response.data,
-      };
+      const response = await api.post<ApiResponse<any>>('/razorpay/verify', verificationData);
+      return response?.data?.status
     } catch (error) {
       console.error('Razorpay payment verification error:', error);
-      return {
-        success: false,
-        message: 'Failed to verify Razorpay payment',
-      };
+      return null;
     }
   },
 };
