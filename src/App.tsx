@@ -4,6 +4,7 @@ import CashfreePage from './pages/CashfreePage';
 import RazorpayPage from './pages/RazorpayPage';
 import Success from './pages/Success';
 import './App.css';
+import CashFreeBuildInExample from './pages/CashFreeBuildIn';
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/cashfree" element={<CashfreePage />} />
+          <Route path="/cashfree" element={<CashFreeBuildInExample />} />
           <Route path="/razorpay" element={<RazorpayPage />} />
           <Route path="/success" element={<Success />} />
         </Routes>

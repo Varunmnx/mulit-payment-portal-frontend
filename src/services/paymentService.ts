@@ -25,13 +25,10 @@ export interface RazorpayProduct {
 }
 
 export const cashfreeService = {
-  createOrder: async (orderData: CashfreeOrderRequest): Promise<CashfreeOrderResponse> => {
+  createOrder: async (orderData: CashfreeOrderRequest): Promise<any> => {
     try {
-      const response = await api.post('/cashfree/order', orderData);
-      return {
-        success: true,
-        ...response.data,
-      };
+      const response = await api.post<ApiResponse<any>>('/cashfree/create-order', orderData);
+      return response?.data.result
     } catch (error) {
       console.error('Cashfree order creation error:', error);
       return {

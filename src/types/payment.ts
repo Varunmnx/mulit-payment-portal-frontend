@@ -11,9 +11,8 @@ export interface RazorpayOrderRequest {
   productId: string;
 }
 
-export interface CashfreeOrderResponse {
-  success: boolean;
-  orderId?: string;
+export interface CashfreeOrderResponse { 
+  order_id?: string;
   paymentLink?: string;
   message?: string;
 }
