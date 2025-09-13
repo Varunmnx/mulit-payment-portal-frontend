@@ -1,4 +1,4 @@
-import { BankType, FintechCategory } from "./enums";
+import { BankType, FintechCategory } from "../../hooks/razorpay/enums";
 
 // Bank interface
 export interface Bank {

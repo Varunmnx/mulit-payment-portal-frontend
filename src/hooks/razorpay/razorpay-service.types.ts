@@ -1,3 +1,4 @@
+import type { Display } from "./instruments.types";
 import type { CurrencyCode } from "./constants/currency";
 
 export const languages = {
@@ -73,7 +74,7 @@ export interface RazorpayOptions {
 	};
 	config?: {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		display: any;
+		display: Display;
 		language : Language
 	};
 }

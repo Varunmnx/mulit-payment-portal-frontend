@@ -64,7 +64,7 @@ const RazorpayCheckout = () => {
             },
             prefill: {
                 name: "John Doe",
-                email: "john.doe@example.com",
+                email: "varunneo380@gmail.com",
                 contact: "9999999999",
             },
             theme: {

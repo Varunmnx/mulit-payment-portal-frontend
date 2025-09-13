@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Display } from "./instruments.types";
 import type { CurrencyCode } from "./constants/currency";
 
 interface RazorpayPrefillOpts {
@@ -36,9 +37,7 @@ interface RazorpayReadonlyOpts {
 }
 
 interface RazorpayConfigOpts {
-  display: {
-    language: "en" | "ben" | "hi" | "mar" | "guj" | "tam" | "tel";
-  };
+  display: Display
 }
 
 interface RazorpayModalOpts {
