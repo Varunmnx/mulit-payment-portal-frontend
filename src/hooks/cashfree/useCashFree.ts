@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from "react";
 
 // Types
 interface CashfreeInstance {
@@ -16,19 +16,20 @@ declare global {
 
 interface UseCashfreeOptions {
   // Add any initialization parameters needed
-  environment?: 'sandbox' | 'production';
+  environment?: "sandbox" | "production";
 }
 
 interface UseCashfreeReturn {
   cashfree: CashfreeInstance | null;
   isLoading: boolean;
   error: Error | null;
-  load: () => Promise<CashfreeInstance | null>;
+  load: (prop: UseCashfreeOptions) => Promise<CashfreeInstance | null>;
 }
 
 const V3_URL = "https://sdk.cashfree.com/js/v3/cashfree.js";
 const V3_URL_REGEX = /^https:\/\/sdk\.cashfree\.com\/js\/v3\/?(\?.*)?$/;
-const EXISTING_SCRIPT_MESSAGE = "load was called but an existing Cashfree.js script already exists in the document; existing script parameters will be used";
+const EXISTING_SCRIPT_MESSAGE =
+  "load was called but an existing Cashfree.js script already exists in the document; existing script parameters will be used";
 
 // Checks whether v3 js script exists in the website
 const findScript = (): HTMLScriptElement | null => {
@@ -48,11 +49,13 @@ const injectScript = (): HTMLScriptElement => {
   const script = document.createElement("script");
   script.src = V3_URL;
   const headOrBody = document.head || document.body;
-  
+
   if (!headOrBody) {
-    throw new Error("Expected document.body not to be null. Cashfree.js requires a <body> element.");
+    throw new Error(
+      "Expected document.body not to be null. Cashfree.js requires a <body> element."
+    );
   }
-  
+
   headOrBody.appendChild(script);
   return script;
 };
@@ -106,11 +109,14 @@ const loadScript = (): Promise<any> => {
   return cashfreePromise;
 };
 
-const initCashfree = (maybeCashfree: any, ...args: any[]): CashfreeInstance | null => {
+const initCashfree = (
+  maybeCashfree: any,
+  ...args: any[]
+): CashfreeInstance | null => {
   if (maybeCashfree === null) {
     return null;
   }
-  
+
   // eslint-disable-next-line prefer-spread
   const cashfree = maybeCashfree.apply(undefined, args);
   return cashfree;
@@ -122,38 +128,35 @@ export const useCashfree = (): UseCashfreeReturn => {
   const [error, setError] = useState<Error | null>(null);
   const loadCalledRef = useRef(false);
 
-  const load = useCallback(async (): Promise<CashfreeInstance | null> => {
-    if (loadCalledRef.current && cashfree) {
-      return cashfree;
-    }
+  const load = useCallback(
+    async (prop: UseCashfreeOptions): Promise<CashfreeInstance | null> => {
+      if (loadCalledRef.current && cashfree) {
+        return cashfree;
+      }
 
-    loadCalledRef.current = true;
-    setIsLoading(true);
-    setError(null);
+      loadCalledRef.current = true;
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      const maybeCashfree = await loadScript();
-      const cashfreeInstance = initCashfree(maybeCashfree);
-      
-      setCashfree(cashfreeInstance);
-      setIsLoading(false);
-      
-      return cashfreeInstance;
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Failed to load Cashfree');
-      setError(error);
-      setIsLoading(false);
-      console.warn(error);
-      return null;
-    }
-  }, [cashfree]);
+      try {
+        const maybeCashfree = await loadScript();
+        const cashfreeInstance = initCashfree(maybeCashfree);
 
-  // Auto-load on mount if in browser environment
-  useEffect(() => {
-    if (typeof window !== "undefined" && !loadCalledRef.current) {
-      load();
-    }
-  }, [load]);
+        setCashfree(cashfreeInstance);
+        setIsLoading(false);
+
+        return cashfreeInstance;
+      } catch (err) {
+        const error =
+          err instanceof Error ? err : new Error("Failed to load Cashfree");
+        setError(error);
+        setIsLoading(false);
+        console.warn(error);
+        return null;
+      }
+    },
+    [cashfree]
+  );
 
   return {
     cashfree,
