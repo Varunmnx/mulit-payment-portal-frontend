@@ -14,7 +14,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/cashfree" element={<CashFreeBuildInExample />} />
           <Route path="/razorpay" element={<RazorpayPage />} />
-          <Route path="/success" element={<Success />} />
+          <Route path="/razorpay/payment/success" element={<Success />} />
         </Routes>
       </div>
     </Router>

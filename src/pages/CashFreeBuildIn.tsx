@@ -6,8 +6,8 @@ import { load } from '@cashfreepayments/cashfree-js';
 const CashFreeBuildInExample: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [customerDetails, setCustomerDetails] = useState({
- "name": "Varun Narayanan",
-    "email": "varunneo380@gmail.com",
+    "name": "Varun Narayanan",
+    "email": "varun.fileago@gmail.com",
     "phone": "7349164543"
   });
 
@@ -23,7 +23,7 @@ const CashFreeBuildInExample: React.FC = () => {
 
     const response = await cashfreeService.createOrder({
       "customerName": "Varun Narayanan2",
-      "customerEmail": "varunneo3802@gmail.com",
+      "customerEmail": "varunneo380@gmail.com",
       "customerPhone": "7349164542",
       "productId": "product_1"
     })
@@ -42,7 +42,7 @@ const CashFreeBuildInExample: React.FC = () => {
       };
       const cashfree = await load({ mode: "sandbox" })
       const result = await cashfree.checkout(paymentData);
-
+      console.log("result",result)
       if (result.success) {
         alert("Payment Successfull")
       }
