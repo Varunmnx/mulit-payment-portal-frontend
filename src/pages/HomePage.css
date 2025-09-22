@@ -56,6 +56,11 @@
   color: white;
 }
 
+.payment-option.custom-cashfree {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: white;
+}
+
 .payment-option h2 {
   margin-top: 0;
   font-size: 1.8rem;
