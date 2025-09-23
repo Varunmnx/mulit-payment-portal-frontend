@@ -7,6 +7,7 @@ import CashFreeBuildInExample from './pages/CashFreeBuildIn';
 import CustomCashfreePayment from './pages/CustomCashfreePayment';
 import CustomCashfreeSuccess from './pages/CustomCashfreeSuccess';
 import CinemaTheather from './components/theather/CinemaTheather';
+import CinemaTheatherV2 from './components/theather/CinemaTheatherV2';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/razorpay" element={<RazorpayPage />} />
           <Route path="/razorpay/payment/success" element={<Success />} />
           <Route path="/movies" element={<CinemaTheather />} />
+          <Route path="/moviesV2" element={<CinemaTheatherV2 />} />
         </Routes>
       </div>
     </Router>

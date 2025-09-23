@@ -1,0 +1,111 @@
+.container {
+  background: #111;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px 10px;
+}
+
+.screen {
+  width: 80%;
+  max-width: 800px;
+  height: 25px;
+  background: #ccc;
+  margin-bottom: 30px;
+  border-radius: 10px;
+  text-align: center;
+  line-height: 25px;
+  font-weight: bold;
+  color: #111;
+}
+
+.seats-container {
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+  border-bottom: 1px dashed #444;
+  padding-bottom: 15px;
+  position: relative;
+}
+
+.seat {
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.3s;
+  position: relative;
+  z-index: 1;
+}
+
+.seat:hover {
+  transform: scale(1.2);
+  z-index: 2;
+}
+
+.seat.selected {
+  background-color: #ff3d3d;
+}
+
+/* Preview Card */
+.preview-card {
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  background: #222;
+  padding: 15px;
+  border-radius: 8px;
+  pointer-events: none;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.preview-card.show {
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+}
+
+/* Mini seat map */
+.seat-map {
+  display: grid;
+  grid-template-columns: repeat(10, 15px);
+  gap: 4px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.mini-seat {
+  width: 15px;
+  height: 15px;
+  background: white;
+  border-radius: 3px;
+}
+
+.mini-seat.selected {
+  background: red;
+}
+
+/* Red zoom lines */
+.zoom-line {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: red;
+  left: 0;
+}
