@@ -19,7 +19,7 @@ function App() {
           <Route path="/custom-cashfree" element={<CustomCashfreePayment />} />
           <Route path="/custom-cashfree/success" element={<CustomCashfreeSuccess />} />
           <Route path="/razorpay" element={<RazorpayPage />} />
-          <Route path="/razorpay/payment/success" element={<Success />} />
+          <Route path="/cashfree/payment/success" element={<CustomCashfreeSuccess />} />
           <Route path="/movies" element={<CinemaTheather />} />
           <Route path="/moviesV2" element={<CinemaTheatherV2 />} />
         </Routes>

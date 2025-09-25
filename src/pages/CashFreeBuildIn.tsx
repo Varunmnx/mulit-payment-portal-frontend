@@ -23,7 +23,7 @@ const CashFreeBuildInExample: React.FC = () => {
 
     const response = await cashfreeService.createOrder({
       "customerName": "Varun Narayanan2",
-      "customerEmail": "varunneo380@gmail.com",
+      "customerEmail": customerDetails.email,
       "customerPhone": "7349164542",
       "productId": "product_1"
     })

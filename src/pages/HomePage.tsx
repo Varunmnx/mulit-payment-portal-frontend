@@ -15,10 +15,10 @@ const HomePage: React.FC = () => {
             <p>Pay using Cashfree payment gateway</p>
           </Link>
           
-          <Link to="/custom-cashfree" className="payment-option custom-cashfree">
+          {/* <Link to="/custom-cashfree" className="payment-option custom-cashfree">
             <h2>Custom Cashfree</h2>
             <p>Pay using our custom Cashfree interface</p>
-          </Link>
+          </Link> */}
           
           <Link to="/razorpay" className="payment-option razorpay">
             <h2>Razorpay</h2>
