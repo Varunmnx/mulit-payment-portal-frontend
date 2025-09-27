@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './SeatBooking.css';
 import TheaterCanvas from './TheatherCanvas';
 
-// ... (all your interfaces remain the same)
 interface Seat {
   id: string;
   row: string;
@@ -33,11 +32,9 @@ interface DragStart {
 
 const TheaterSeatBooking: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedSeats, setSelectedSeats] = useState<Set<string>>(new Set());
   const [hoveredSeat, setHoveredSeat] = useState<string | null>(null);
   
-  // Pan and zoom state
   const [panOffset, setPanOffset] = useState<PanOffset>({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragStart, setDragStart] = useState<DragStart>({ x: 0, y: 0 });
@@ -45,18 +42,15 @@ const TheaterSeatBooking: React.FC = () => {
   const [isDragSelecting, setIsDragSelecting] = useState<boolean>(false);
   const [dragSelectInitialState, setDragSelectInitialState] = useState<'select' | 'deselect' | null>(null);
   
-  // Theater configuration
   const SEAT_SIZE = 28;
   const SEAT_SPACING = 32;
   const ROW_SPACING = 38;
   const CANVAS_WIDTH = 1000;
   const CANVAS_HEIGHT = 600;
   const THEATER_HEIGHT = 800;
-  const PREVIEW_WIDTH = 220;
-  const PREVIEW_HEIGHT = 160;
 
-  // ... (generateSeats, getSeatXPosition, getSeatStyle remain unchanged)
   const generateSeats = (): Seat[] => {
+    // ... (same as before) ...
     const seats: Seat[] = [];
     const primeRowsConfig = {
       'N': { seats: [1,2,4,5,6,7,9,10,11,12,13,14,15], soldSeats: [3,8], y: 80 },
@@ -198,42 +192,42 @@ const TheaterSeatBooking: React.FC = () => {
     height: number, 
     isPreview: boolean = false
   ): void => {
-    const seatScale = isPreview ? 0.28 : 1;
-    const fontScale = isPreview ? 0.35 : 1;
-    const currentScale = isPreview ? 0.25 : scale;
-    const currentPanX = isPreview ? 0 : panOffset.x;
-    const currentPanY = isPreview ? 0 : panOffset.y;
+    const seatScale = isPreview ? 1 : 1; // ← Increased from 0.28 to 0.65 for visibility
+    const fontScale = isPreview ? .6 : 1; // ← Hide text in preview
+    const currentScale = isPreview ? 1 : scale;
+    const currentPanX = isPreview ? 0.3 : panOffset.x;
+    const currentPanY = isPreview ? 0.3 : panOffset.y;
     
-    ctx.fillStyle = '#f5f5f5';
+    ctx.fillStyle = isPreview ? '#1e1e1e' : '#f5f5f5'; // Dark bg for preview canvas
     ctx.fillRect(0, 0, width, height);
     
     ctx.save();
-    if (!isPreview) {
+    // if (!isPreview) {
       ctx.scale(currentScale, currentScale);
       ctx.translate(currentPanX / currentScale, currentPanY / currentScale);
-    }
+    // }
     
     // Section headers (only in main view)
-    if (!isPreview) {
+    // if (!isPreview) {
       ctx.fillStyle = '#555';
       ctx.font = `bold ${16 * fontScale}px Arial`;
       ctx.textAlign = 'center';
       ctx.fillText('₹260 PRIME ROWS', CANVAS_WIDTH / 2, 50);
       ctx.fillText('₹220 CLASSIC PLUS ROWS', CANVAS_WIDTH / 2, 360);
       ctx.fillText('₹200 CLASSIC ROWS', CANVAS_WIDTH / 2, 548);
-    }
+    // }
     
     const rowsDrawn = new Set<string>();
     seats.forEach(seat => {
       const x = getSeatXPosition(seat);
       const y = seat.y;
       
-      if (!isPreview) {
+    //   if (!isPreview) {
         seat.x = x;
         seat.displayY = y;
-      }
+    //   }
       
-      if (!rowsDrawn.has(seat.row) && !isPreview) {
+      if (!rowsDrawn.has(seat.row) ) {
         ctx.fillStyle = '#222';
         ctx.font = `bold ${18 * fontScale}px Arial`;
         ctx.textAlign = 'center';
@@ -243,25 +237,25 @@ const TheaterSeatBooking: React.FC = () => {
       
       const style = getSeatStyle(seat);
       ctx.fillStyle = style.fill;
-      ctx.strokeStyle = style.stroke;
-      ctx.lineWidth = isPreview ? 0.8 : 1.5;
+      ctx.strokeStyle = isPreview ? 'transparent' : style.stroke;
+      ctx.lineWidth = isPreview ? 1 : 1.5;
       
       const size = SEAT_SIZE * seatScale;
-      drawRoundedRect(ctx, x, y, size, size, isPreview ? 1 : 4);
-      ctx.fill();
-      ctx.stroke();
-      
-      if (seatScale > 0.22 && !isPreview) {
+  
+        drawRoundedRect(ctx, x, y, size, size, 4);
+        ctx.fill();
+        ctx.stroke();
+        
         ctx.fillStyle = style.textColor;
-        ctx.font = `bold ${11 * fontScale}px Arial`;
+        ctx.font = `bold ${11}px Arial`;
         ctx.textAlign = 'center';
         ctx.fillText(seat.number.toString().padStart(2, '0'), x + size / 2, y + size / 2 + 4);
-      }
+    //   }
     });
     
-    // Screen
-    const screenY = THEATER_HEIGHT - 60;
-    if (!isPreview) {
+    // Screen (only in main view)
+    // if (!isPreview) {
+      const screenY = THEATER_HEIGHT - 60;
       const screenWidth = 400;
       const screenHeight = 25;
       const screenX = CANVAS_WIDTH / 2 - screenWidth / 2;
@@ -274,10 +268,59 @@ const TheaterSeatBooking: React.FC = () => {
       ctx.strokeStyle = '#90caf9';
       ctx.lineWidth = 1.5;
       ctx.stroke();
-    }
+    // }
     
     ctx.restore();
-  }, [seats, selectedSeats, hoveredSeat, scale, panOffset]);
+
+    // === HIGH-CONTRAST MINI-MAP (only while dragging) ===
+    if (!isPreview && isDragging) {
+      const PREVIEW_HEIGHT = 180;
+      const PREVIEW_WIDTH = (PREVIEW_HEIGHT / THEATER_HEIGHT) * CANVAS_WIDTH;
+
+      const margin = 16;
+      const previewX = width - PREVIEW_WIDTH - margin;
+      const previewY = height - PREVIEW_HEIGHT - margin;
+
+      // Background for visibility
+      ctx.save();
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+      ctx.strokeStyle = '#4fc3f7';
+      ctx.lineWidth = 2;
+      drawRoundedRect(ctx, previewX - 3, previewY - 3, PREVIEW_WIDTH + 6, PREVIEW_HEIGHT + 6, 8);
+      ctx.fill();
+      ctx.stroke();
+
+      // Draw preview content
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(previewX, previewY, PREVIEW_WIDTH, PREVIEW_HEIGHT);
+      ctx.clip();
+
+      ctx.translate(previewX, previewY);
+      const scaleX = PREVIEW_WIDTH / CANVAS_WIDTH;
+      const scaleY = PREVIEW_HEIGHT / THEATER_HEIGHT;
+      ctx.scale(scaleX, scaleY);
+
+      // Draw full theater in preview mode (with larger seats, no text)
+      drawTheater(ctx, CANVAS_WIDTH, THEATER_HEIGHT, true);
+
+      ctx.restore(); // exit clip & transform
+
+      // Viewport indicator
+      const vx = (-panOffset.x / scale) * scaleX;
+      const vy = (-panOffset.y / scale) * scaleY;
+      const vw = (CANVAS_WIDTH / scale) * scaleX;
+      const vh = (CANVAS_HEIGHT / scale) * scaleY;
+
+      ctx.strokeStyle = '#ff5722';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 4]);
+      ctx.strokeRect(previewX + vx, previewY + vy, vw, vh);
+      ctx.setLineDash([]);
+
+      ctx.restore(); // exit background
+    }
+  }, [seats, selectedSeats, hoveredSeat, scale, panOffset, isDragging]);
 
   const drawMainCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -293,51 +336,30 @@ const TheaterSeatBooking: React.FC = () => {
     drawTheater(ctx, CANVAS_WIDTH, CANVAS_HEIGHT, false);
   }, [drawTheater]);
 
-  const drawPreviewCanvas = useCallback(() => {
-    const canvas = previewCanvasRef.current;
+  const getSeatAtPosition = (clientX: number, clientY: number): Seat | undefined => {
+    const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = PREVIEW_WIDTH * dpr;
-    canvas.height = PREVIEW_HEIGHT * dpr;
-    canvas.style.width = `${PREVIEW_WIDTH}px`;
-    canvas.style.height = `${PREVIEW_HEIGHT}px`;
-    ctx.scale(dpr, dpr);
-    
-    // Draw full theater scaled down
-    ctx.save();
-    const scaleX = PREVIEW_WIDTH / CANVAS_WIDTH;
-    const scaleY = PREVIEW_HEIGHT / THEATER_HEIGHT;
-    ctx.scale(scaleX, scaleY);
-    drawTheater(ctx, CANVAS_WIDTH, THEATER_HEIGHT, true);
-    ctx.restore();
-    
-    // Viewport indicator (smaller & cleaner)
-    const vx = (-panOffset.x / scale) * (PREVIEW_WIDTH / CANVAS_WIDTH);
-    const vy = (-panOffset.y / scale) * (PREVIEW_HEIGHT / THEATER_HEIGHT);
-    const vw = (CANVAS_WIDTH / scale) * (PREVIEW_WIDTH / CANVAS_WIDTH);
-    const vh = (CANVAS_HEIGHT / scale) * (PREVIEW_HEIGHT / THEATER_HEIGHT);
-    
-    ctx.strokeStyle = '#ff5722';
-    ctx.lineWidth = 1.2;
-    ctx.setLineDash([3, 2]);
-    ctx.strokeRect(vx, vy, vw, vh);
-    ctx.setLineDash([]);
-  }, [drawTheater, panOffset, scale]);
+    const rect = canvas.getBoundingClientRect();
+    const x = ((clientX - rect.left) - panOffset.x) / scale;
+    const y = ((clientY - rect.top) - panOffset.y) / scale;
+    return seats.find(seat => 
+      seat.x !== undefined && seat.displayY !== undefined &&
+      x >= seat.x && x <= seat.x + SEAT_SIZE &&
+      y >= seat.displayY && y <= seat.displayY + SEAT_SIZE
+    );
+  };
 
-  // Event handlers (same logic, but preview auto-show on drag)
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (e.button === 0) {
       const seat = getSeatAtPosition(e.clientX, e.clientY);
       if (seat && seat.status !== 'sold') {
         setIsDragSelecting(true);
         setDragSelectInitialState(selectedSeats.has(seat.id) ? 'deselect' : 'select');
-        setSelectedSeats(prev => {
-          const s = new Set(prev);
-          s.has(seat.id) ? s.delete(seat.id) : s.add(seat.id);
-          return s;
-        });
+        // setSelectedSeats(prev => {
+        //   const s = new Set(prev);
+        //   s.has(seat.id) ? s.delete(seat.id) : s.add(seat.id);
+        //   return s;
+        // });
         setHoveredSeat(null);
       } else {
         setIsDragging(true);
@@ -407,19 +429,6 @@ const TheaterSeatBooking: React.FC = () => {
     setPanOffset({ x: newPanX, y: newPanY });
   };
 
-  const getSeatAtPosition = (clientX: number, clientY: number): Seat | undefined => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = ((clientX - rect.left) - panOffset.x) / scale;
-    const y = ((clientY - rect.top) - panOffset.y) / scale;
-    return seats.find(seat => 
-      seat.x !== undefined && seat.displayY !== undefined &&
-      x >= seat.x && x <= seat.x + SEAT_SIZE &&
-      y >= seat.displayY && y <= seat.displayY + SEAT_SIZE
-    );
-  };
-
   const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDragging && !isDragSelecting) {
       const seat = getSeatAtPosition(e.clientX, e.clientY);
@@ -438,8 +447,9 @@ const TheaterSeatBooking: React.FC = () => {
     setScale(1);
   };
 
-  useEffect(() => { drawMainCanvas(); }, [drawMainCanvas]);
-  useEffect(() => { if (isDragging) drawPreviewCanvas(); }, [drawPreviewCanvas, isDragging]);
+  useEffect(() => { 
+    drawMainCanvas(); 
+  }, [drawMainCanvas]);
 
   return (
     <div className="theater-container">
@@ -457,14 +467,6 @@ const TheaterSeatBooking: React.FC = () => {
           handleMouseUp={handleMouseUp}
           handleWheel={handleWheel}
         />
-        
-        {/* Auto-show preview ONLY while dragging (panning) */}
-        {isDragging && (
-          <div className="theater-preview">
-            <div className="preview-title">Map</div>
-            <canvas ref={previewCanvasRef} className="preview-canvas" />
-          </div>
-        )}
       </div>
     </div>
   );

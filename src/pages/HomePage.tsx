@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './HomePage.css';
+import { PaymentGateway } from '../utils/payment-gateways';
 
 const HomePage: React.FC = () => {
   return (
@@ -10,7 +11,7 @@ const HomePage: React.FC = () => {
         <p>Select your preferred payment method:</p>
         
         <div className="payment-methods">
-          <Link to="/cashfree" className="payment-option cashfree">
+          <Link to={`/movies?paymentMethod=${PaymentGateway.Cashfree}`} className="payment-option cashfree">
             <h2>Cashfree</h2>
             <p>Pay using Cashfree payment gateway</p>
           </Link>
@@ -20,7 +21,7 @@ const HomePage: React.FC = () => {
             <p>Pay using our custom Cashfree interface</p>
           </Link> */}
           
-          <Link to="/razorpay" className="payment-option razorpay">
+          <Link to={`/movies?paymentMethod=${PaymentGateway.Razorpay}`} className="payment-option razorpay">
             <h2>Razorpay</h2>
             <p>Pay using Razorpay payment gateway</p>
           </Link>

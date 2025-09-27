@@ -1,111 +1,417 @@
-.container {
-  background: #111;
-  color: #fff;
-  font-family: Arial, sans-serif;
+/* Base */
+.theater-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+}
+
+/* Header */
+.theater-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+}
+
+.movie-info {
   display: flex;
   flex-direction: column;
+  gap: 8px;
+}
+
+.movie-title-row {
+  display: flex;
   align-items: center;
-  padding: 50px 10px;
+  gap: 10px;
 }
 
-.screen {
-  width: 80%;
-  max-width: 800px;
-  height: 25px;
-  background: #ccc;
-  margin-bottom: 30px;
-  border-radius: 10px;
-  text-align: center;
-  line-height: 25px;
+.back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #f0f0f0;
+}
+
+.back-icon {
+  width: 20px;
+  height: 20px;
+  color: #333;
+}
+
+.movie-title {
+  font-size: 24px;
   font-weight: bold;
-  color: #111;
+  color: #333;
+  margin: 0;
 }
 
-.seats-container {
+.movie-details {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.showtime-badge {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+.showtime {
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.format {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: normal;
+}
+
+.ticket-counter {
+  display: flex;
+  align-items: center;
+}
+
+.ticket-button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.ticket-button:hover {
+  background: #45a049;
+}
+
+.edit-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Controls */
+.theater-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  margin-bottom: 20px;
+}
+
+.control-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.preview-button,
+.reset-button {
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.preview-button:hover,
+.reset-button:hover {
+  background: #e0e0e0;
+}
+
+.control-info {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.instructions,
+.scale-info {
+  padding: 4px 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+/* Theater Canvas Container */
+.theater-canvas-container {
+  position: relative;
+  width: 500px;
+  height: 600px; 
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  /* background: #fff; */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.theater-canvas-container canvas {
+  display: block;
   width: 100%;
+  height: 100%;
+  cursor: grab;
 }
 
-.row {
+.theater-canvas-container canvas:active {
+  cursor: grabbing;
+}
+
+/* Auto-show Preview (Mini-map) — only during drag */
+.theater-preview {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: white;
+  border: 1px solid #ff7043;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  z-index: 20;
+  pointer-events: none;
+  font-size: 12px;
+  width: 240px;
+  overflow: hidden;
+}
+
+.preview-title {
+  text-align: center;
+  font-weight: bold;
+  color: #e65100;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.preview-canvas {
+  display: block;
+  width: 100%;
+  height: 150px;
+  border-radius: 4px;
+  background: #f8f8f8;
+}
+
+/* Legend */
+.theater-legend {
   display: flex;
   justify-content: center;
-  margin: 15px 0;
-  border-bottom: 1px dashed #444;
-  padding-bottom: 15px;
-  position: relative;
-}
-
-.seat {
-  width: 40px;
-  height: 40px;
-  background-color: white;
-  margin: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: transform 0.2s, background-color 0.3s;
-  position: relative;
-  z-index: 1;
-}
-
-.seat:hover {
-  transform: scale(1.2);
-  z-index: 2;
-}
-
-.seat.selected {
-  background-color: #ff3d3d;
-}
-
-/* Preview Card */
-.preview-card {
-  position: absolute;
-  top: -200px;
-  left: 50%;
-  transform: translateX(-50%) scale(0);
-  background: #222;
+  gap: 30px;
+  margin: 20px 0;
   padding: 15px;
+  background: #fff;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  pointer-events: none;
-  color: #fff;
-  font-size: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legend-seat {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
   font-weight: bold;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  opacity: 0;
-  z-index: 10;
+  border: 2px solid;
+}
+
+.legend-seat.available {
+  background: #fff;
+  border-color: #4caf50;
+  color: #4caf50;
+}
+
+.legend-seat.selected {
+  background: #4caf50;
+  border-color: #388e3c;
+  color: white;
+}
+
+.legend-seat.sold {
+  background: #f0f0f0;
+  border-color: #d0d0d0;
+  color: #888;
+}
+
+.legend-label {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Booking Summary */
+.booking-summary {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.summary-content {
   display: flex;
   flex-direction: column;
+  gap: 15px;
+}
+
+.summary-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 15px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.section-group {
+  margin-bottom: 15px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.selected-seats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.selected-seat-tag {
+  background: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.summary-footer {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  margin-top: 15px;
 }
 
-.preview-card.show {
-  transform: translateX(-50%) scale(1);
-  opacity: 1;
+.total-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* Mini seat map */
-.seat-map {
-  display: grid;
-  grid-template-columns: repeat(10, 15px);
-  gap: 4px;
-  margin-bottom: 10px;
-  position: relative;
+.total-label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
 }
 
-.mini-seat {
-  width: 15px;
-  height: 15px;
-  background: white;
-  border-radius: 3px;
+.total-price {
+  font-size: 18px;
+  font-weight: bold;
+  color: #4caf50;
 }
 
-.mini-seat.selected {
-  background: red;
+.seat-count {
+  font-size: 14px;
+  color: #666;
 }
 
-/* Red zoom lines */
-.zoom-line {
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  background: red;
-  left: 0;
+.proceed-button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.proceed-button:hover {
+  background: #45a049;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .theater-container {
+    padding: 10px;
+  }
+
+  .theater-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .movie-title {
+    font-size: 20px;
+  }
+
+  .theater-canvas-container {
+    height: 500px;
+  }
+
+  .theater-preview {
+    top: 8px;
+    right: 8px;
+    width: 180px;
+  }
+
+  .preview-canvas {
+    height: 120px;
+  }
+
+  .booking-summary {
+    padding: 15px;
+  }
+
+  .summary-title {
+    font-size: 16px;
+  }
+
+  .total-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .proceed-button {
+    width: 100%;
+    padding: 12px;
+  }
 }
